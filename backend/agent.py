@@ -8,11 +8,20 @@ from mcp import StdioServerParameters
 current_dir = os.path.dirname(os.path.abspath(__file__))
 mcp_server_path = os.path.join(current_dir, "mcp_server.py")
 
-# Configure connection parameter to run mcp_server.py as a local stdio subprocess
+# Forward environment variables safely (only strings, no NoneType to avoid Pydantic validation failure)
+safe_env = {k: v for k, v in os.environ.items() if v is not None}
+# Ensure both key names are forwarded — the ADK framework reads GOOGLE_API_KEY internally
+_api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+if _api_key:
+    safe_env["GOOGLE_API_KEY"] = _api_key
+    safe_env["GEMINI_API_KEY"] = _api_key
+if os.getenv("GITHUB_TOKEN"):
+    safe_env["GITHUB_TOKEN"] = os.getenv("GITHUB_TOKEN")
+
 server_params = StdioServerParameters(
     command=sys.executable,  # Use current Python environment interpreter
     args=[mcp_server_path],
-    env=dict(os.environ)     # Forward environment variables (such as GITHUB_TOKEN, GEMINI_API_KEY)
+    env=safe_env
 )
 
 # Connect to the local MCP server tools using McpToolset

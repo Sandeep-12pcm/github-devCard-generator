@@ -101,18 +101,29 @@ async def scrape_github(username: str) -> dict:
 
 
 @mcp.tool
-async def analyze_profile(github_data: dict) -> dict:
+async def analyze_profile(github_data: Any) -> dict:
     """
     Uses Gemini 2.5 Flash to analyze GitHub statistics and formulate a developer persona,
     top skills, fun facts, and an ideal visual theme.
     
     Args:
-        github_data (dict): The dictionary returned by scrape_github.
+        github_data (Any): The dictionary or JSON string returned by scrape_github.
         
     Returns:
         dict: Profile analysis JSON containing vibe, skills, fun fact, and card theme.
     """
-    client = genai.Client()
+    # Robustly parse github_data if it is passed as a stringified JSON
+    if isinstance(github_data, str):
+        try:
+            github_data = json.loads(github_data)
+        except Exception as e:
+            raise ValueError(f"Failed to parse github_data JSON string: {str(e)}")
+    if not isinstance(github_data, dict):
+        raise ValueError(f"github_data must be a dictionary or a valid JSON string, got {type(github_data)}")
+
+    api_key = os.getenv("GEMINI_API_KEY")
+    client = genai.Client(api_key=api_key)
+    print("GEMINI_API_KEY is loaded:", "Yes" if api_key else "No")
     
     prompt = f"""
     Analyze the following GitHub developer profile data:
@@ -154,19 +165,37 @@ async def analyze_profile(github_data: dict) -> dict:
 
 
 @mcp.tool
-async def generate_card_html(username: str, github_data: dict, analysis: dict) -> str:
+async def generate_card_html(username: str, github_data: Any, analysis: Any) -> str:
     """
     Generates a beautiful self-contained HTML page representing the developer card
     styled according to the chosen theme.
     
     Args:
         username (str): The GitHub handle.
-        github_data (dict): Profile statistics.
-        analysis (dict): The generated Gemini personality analysis.
+        github_data (Any): Profile statistics (dict or JSON string).
+        analysis (Any): The generated Gemini personality analysis (dict or JSON string).
         
     Returns:
         str: Fully compiled visual HTML card.
     """
+    # Robustly parse github_data if passed as stringified JSON
+    if isinstance(github_data, str):
+        try:
+            github_data = json.loads(github_data)
+        except Exception:
+            github_data = {}
+    if not isinstance(github_data, dict):
+        github_data = {}
+
+    # Robustly parse analysis if passed as stringified JSON
+    if isinstance(analysis, str):
+        try:
+            analysis = json.loads(analysis)
+        except Exception:
+            analysis = {}
+    if not isinstance(analysis, dict):
+        analysis = {}
+
     theme = analysis.get("card_theme", "builder")
     name = github_data.get("name", username)
     avatar = github_data.get("avatar_url", "")
