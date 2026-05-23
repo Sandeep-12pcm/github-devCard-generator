@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandeep's Portfolio Badge</title>
+    <!-- Imports of beautiful, premium fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+            overflow: hidden;
+        }
+        .card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 2.2rem 1.8rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.015);
+        }
+        /* Card header section */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 2px solid #3b82f6;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+        .location {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        /* Vibe bio box */
+        .vibe-box {
+            font-style: italic;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #94a3b8;
+            border-left: 2px solid #3b82f6;
+            padding-left: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Specializations */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .skill-badge {
+            font-size: 0.7rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #f8fafc;
+            font-weight: 600;
+        }
+        /* Profile stats layout */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.85rem 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.15rem;
+        }
+        /* Top showcase repos */
+        .repos-section-title {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+        }
+        .repo-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-bottom: 0.6rem;
+            transition: all 0.2s ease;
+        }
+        .repo-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .repo-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .repo-stars {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .repo-desc {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        /* Fun facts footer badge */
+        .fun-fact-container {
+            margin-top: 1.25rem;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px dashed rgba(255,255,255,0.06);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="profile-header">
+            <img class="avatar" src="https://avatars.githubusercontent.com/u/158475809?v=4" alt="Sandeep">
+            <div>
+                <div class="name">Sandeep</div>
+                <div class="location">📍 Cloud Space</div>
+            </div>
+        </div>
+        
+        <div class="vibe-box">
+            "A diligent builder from the Cloud Space, crafting web applications primarily with JavaScript and TypeScript, from collaborative rooms to educational platforms."
+        </div>
+        
+        <div class="skills-container">
+            <span class="skill-badge">Full-Stack JavaScript Development</span><span class="skill-badge">Interactive User Interface Design</span><span class="skill-badge">Application Data Management</span>
+        </div>
+        
+        <div class="stats-grid">
+            <div>
+                <div class="stat-value">17</div>
+                <div class="stat-label">Repositories</div>
+            </div>
+            <div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">Followers</div>
+            </div>
+        </div>
+        
+        <div class="repos-section-title">Top Showcase Repos</div>
+        <div style="max-height: 240px; overflow-y: auto; padding-right: 0.25rem;">
+            
+        <div class="repo-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span class="repo-name">CollabRoom</span>
+                <span class="repo-stars">⭐ 2</span>
+            </div>
+            <div class="repo-desc">No description provided.</div>
+            <div style="font-size: 0.7rem; color: #3b82f6; font-weight: bold; margin-top: 0.4rem;">
+                ● TypeScript
+            </div>
+        </div>
+        
+        <div class="repo-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span class="repo-name">StudyHub</span>
+                <span class="repo-stars">⭐ 1</span>
+            </div>
+            <div class="repo-desc">No description provided.</div>
+            <div style="font-size: 0.7rem; color: #3b82f6; font-weight: bold; margin-top: 0.4rem;">
+                ● JavaScript
+            </div>
+        </div>
+        
+        <div class="repo-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span class="repo-name">LibraryManagementSystem</span>
+                <span class="repo-stars">⭐ 1</span>
+            </div>
+            <div class="repo-desc">No description provided.</div>
+            <div style="font-size: 0.7rem; color: #3b82f6; font-weight: bold; margin-top: 0.4rem;">
+                ● JavaScript
+            </div>
+        </div>
+        
+        </div>
+        
+        <div class="fun-fact-container">
+            💡 <strong>Fun Fact:</strong> Based in 'Cloud Space', Sandeep is single-handedly populating their digital universe with essential services, from collaborative meeting rooms to educational libraries.
+        </div>
+    </div>
+</body>
+</html>

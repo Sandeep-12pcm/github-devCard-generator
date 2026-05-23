@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Dev Card Generator</title>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Reset & Variable System */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #0d1117;
+            --surface: #161b22;
+            --surface-hover: #21262d;
+            --border: #30363d;
+            --primary: #2188ff;
+            --primary-hover: #4ea5ff;
+            --success: #3fb950;
+            --error: #f85149;
+            --text-main: #c9d1d9;
+            --text-heading: #f0f6fc;
+            --text-muted: #8b949e;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Background Gradient Accents */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(33, 136, 255, 0.08) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        /* Container Layout Constraints */
+        .wrapper {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* Typography */
+        .header-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        h1 {
+            color: var(--text-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.75px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subheading {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* Visual Action Form */
+        .console-panel {
+            width: 100%;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .console-panel:hover {
+            border-color: rgba(33, 136, 255, 0.25);
+        }
+
+        .form-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-group {
+                flex-direction: column;
+            }
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-heading);
+            padding: 0.85rem 1rem 0.85rem 2.2rem;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 136, 255, 0.15);
+        }
+
+        .btn-action {
+            background-color: #21262d;
+            color: var(--text-heading);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.5rem;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-action:hover:not(:disabled) {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-action:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn-action:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Premium Pulsing Loading Skeleton */
+        .skeleton-loader {
+            width: 100%;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.2rem;
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .skeleton-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .skeleton-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #21262d 25%, #30363d 50%, #21262d 75%);
+            background-size: 200% 100%;
+            animation: loading-pulse 1.5s infinite;
+        }
+
+        .skeleton-header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .skeleton-bar {
+            height: 14px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #21262d 25%, #30363d 50%, #21262d 75%);
+            background-size: 200% 100%;
+            animation: loading-pulse 1.5s infinite;
+        }
+
+        .skeleton-bar.short { width: 50%; }
+        .skeleton-bar.mid { width: 70%; }
+        .skeleton-bar.long { width: 90%; }
+        .skeleton-bar.tall { height: 60px; border-radius: 8px; }
+
+        @keyframes loading-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Result Visualization Wrapper */
+        .result-container {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            gap: 1.25rem;
+            align-items: center;
+        }
+
+        .card-preview-panel {
+            width: 100%;
+            height: 520px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: var(--surface);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transform: translateY(10px);
+            animation: cardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+
+        /* Dynamic Share Badge button */
+        .btn-share {
+            background-color: #238636;
+            color: #fff;
+            border: 1px solid rgba(240, 246, 242, 0.1);
+            padding: 0.85rem 2rem;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(56, 185, 80, 0.15);
+        }
+
+        .btn-share:hover {
+            background-color: #2ea043;
+            transform: translateY(-1px);
+        }
+
+        .btn-share:active {
+            transform: translateY(1px);
+        }
+
+        /* Error States Alert Panels */
+        .error-panel {
+            width: 100%;
+            background-color: rgba(248, 81, 73, 0.08);
+            border: 1px solid rgba(248, 81, 73, 0.2);
+            color: #ff7b72;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            animation: errorShake 0.4s ease-in-out;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* Custom scrollbar for preview Panel if needed */
+        iframe::-webkit-scrollbar {
+            width: 6px;
+        }
+        iframe::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        iframe::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <header class="header-section">
+            <h1>GitHub Dev Card Generator</h1>
+            <p class="subheading">Enter any public GitHub username</p>
+        </header>
+
+        <!-- Input Console -->
+        <div class="console-panel">
+            <form id="cardForm">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <span class="input-prefix">@</span>
+                        <input type="text" id="username" placeholder="username" required autocomplete="off" autofocus>
+                    </div>
+                    <button type="submit" id="generateBtn" class="btn-action">
+                        <span>Generate Card</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Friendly Error feedback panel -->
+        <div class="error-panel" id="errorPanel">
+            <span style="font-size: 1.15rem;">⚠️</span>
+            <span id="errorMessage">Username not found. Make sure spelling is correct.</span>
+        </div>
+
+        <!-- Pulse Loading State -->
+        <div class="skeleton-loader" id="skeletonLoader">
+            <div class="skeleton-header">
+                <div class="skeleton-avatar"></div>
+                <div class="skeleton-header-info">
+                    <div class="skeleton-bar short"></div>
+                    <div class="skeleton-bar mid"></div>
+                </div>
+            </div>
+            <div class="skeleton-bar tall"></div>
+            <div class="skeleton-bar long"></div>
+            <div class="skeleton-bar mid"></div>
+            <div class="skeleton-bar short"></div>
+        </div>
+
+        <!-- Visual Result Container -->
+        <div class="result-container" id="resultContainer">
+            <div class="card-preview-panel">
+                <iframe class="card-iframe" id="cardIframe" title="Developer Portfolio Card"></iframe>
+            </div>
+            
+            <button class="btn-share" id="shareBtn">
+                <span>Copy Share Link</span>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('cardForm');
+        const usernameInput = document.getElementById('username');
+        const generateBtn = document.getElementById('generateBtn');
+        const errorPanel = document.getElementById('errorPanel');
+        const errorMessage = document.getElementById('errorMessage');
+        const skeletonLoader = document.getElementById('skeletonLoader');
+        const resultContainer = document.getElementById('resultContainer');
+        const cardIframe = document.getElementById('cardIframe');
+        const shareBtn = document.getElementById('shareBtn');
+
+        // Target exact uvicorn server port (localhost:8080)
+        let BACKEND_URL = '$BACKEND_URL';
+        // Graceful fallback for direct local file testing without Docker
+        if (BACKEND_URL.startsWith('$') || BACKEND_URL === '') {
+            BACKEND_URL = 'http://localhost:8080/generate';
+        }
+        let savedCardUrl = '';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = usernameInput.value.trim().toLowerCase();
+            if (!username) return;
+
+            // Reset States
+            generateBtn.disabled = true;
+            errorPanel.style.display = 'none';
+            resultContainer.style.display = 'none';
+            skeletonLoader.style.display = 'flex';
+
+            try {
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.detail || `Server returned error status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    let cardHtml = data.card_html;
+
+                    // Strip markdown wrapping code blocks if the LLM output contained them
+                    cardHtml = cardHtml.replace(/^```html\s*/i, '').replace(/```\s*$/g, '').trim();
+
+                    // Load card URL path and build full path using backend origin dynamically
+                    savedCardUrl = `${new URL(BACKEND_URL).origin}${data.card_url}`;
+
+                    // Inject and compile HTML/CSS inside the isolated iframe
+                    const doc = cardIframe.contentDocument || cardIframe.contentWindow.document;
+                    doc.open();
+                    doc.write(cardHtml);
+                    doc.close();
+
+                    // Transition visuals
+                    skeletonLoader.style.display = 'none';
+                    resultContainer.style.display = 'flex';
+                } else {
+                    throw new Error("Failed to process card response.");
+                }
+
+            } catch (err) {
+                console.error(err);
+                skeletonLoader.style.display = 'none';
+                
+                // Set custom friendly error message
+                errorMessage.innerText = err.message.includes('not found') 
+                    ? `GitHub profile '@${username}' was not found. Please verify the handle.`
+                    : `Could not connect to generator backend. Make sure the FastAPI service is running.`;
+                
+                errorPanel.style.display = 'flex';
+            } finally {
+                generateBtn.disabled = false;
+            }
+        });
+
+        // Setup share link copy capability
+        shareBtn.addEventListener('click', async () => {
+            if (!savedCardUrl) return;
+
+            try {
+                await navigator.clipboard.writeText(savedCardUrl);
+                const originalText = shareBtn.querySelector('span').innerText;
+                
+                // Temporarily swap text to show action completion
+                shareBtn.querySelector('span').innerText = 'Copied to Clipboard!';
+                shareBtn.style.backgroundColor = '#1f6feb';
+                
+                setTimeout(() => {
+                    shareBtn.querySelector('span').innerText = originalText;
+                    shareBtn.style.backgroundColor = '#238636';
+                }, 2000);
+            } catch (err) {
+                console.error('Could not copy link: ', err);
+                alert(`Share Link: ${savedCardUrl}`);
+            }
+        });
+    </script>
+</body>
+</html>
